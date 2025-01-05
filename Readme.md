@@ -60,4 +60,4 @@ PORT=8000 MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net C
 
 ACCESS_TOKEN_SECRET=your_access_token_secret ACCESS_TOKEN_EXPIRY=1d REFRESH_TOKEN_SECRET=your_refresh_token_secret REFRESH_TOKEN_EXPIRY=7d
 
-This Readme.md file provides an overview of the project, its structure, current progress, and instructions on how to run the project. This Readme.md file provides an overview of the project, its structure, current progress, and instructions on how to run the project.
+This Readme.md file provides an overview of the project, its structure, current progress, and instructions on how to run the project. It also includes information about environment variables and key files in the project.
