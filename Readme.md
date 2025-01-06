@@ -33,6 +33,60 @@ youtube_backend/ ├── .env ├── .gitignore ├── .prettierignore �
     - **`ApiResponse.js`**: Defines a custom response class for API responses.
     - **`asyncHandler.js`**: A utility function for handling asynchronous route handlers.
 
+## Middleware
+
+Middleware functions are used to handle various tasks such as authentication, error handling, and request validation. The middleware functions are located in the `src/middleware/` directory.
+
+## Cloudinary Integration
+
+Cloudinary is used for managing and storing media files such as images and videos. The integration with Cloudinary is set up to handle file uploads and storage.
+
+### Setting Up Cloudinary
+
+1. Install the Cloudinary package:
+    ```sh
+    npm install cloudinary
+    ```
+
+2. Configure Cloudinary in your project. Create a `cloudinary.js` file in the  directory with the following content:
+    ```javascript
+    import { v2 as cloudinary } from 'cloudinary';
+
+    cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+
+    export default cloudinary;
+    ```
+
+3. Add the following environment variables to your  file:
+    ```properties
+    CLOUDINARY_CLOUD_NAME=your_cloud_name
+    CLOUDINARY_API_KEY=your_api_key
+    CLOUDINARY_API_SECRET=your_api_secret
+    ```
+
+Replace `your_cloud_name`, `your_api_key`, and `your_api_secret` with your actual Cloudinary credentials.
+
+### Using Cloudinary
+
+You can now use Cloudinary in your controllers to upload and manage media files. For example, in a controller file:
+
+```javascript
+import cloudinary from '../utils/cloudinary.js';
+
+const uploadImage = async (req, res) => {
+    try {
+        const result = await cloudinary.uploader.upload(req.file.path);
+        res.json({ url: result.secure_url });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to upload image' });
+    }
+};
+```
+
 ## Current Progress
 
 1. **Environment Setup**: The project is set up with necessary environment variables in the `.env` file.
