@@ -28,9 +28,24 @@ app.use(express.urlencoded({
 //images, fevicon stored in this folder 
 app.use(express.static("public"))
 
-
 //cookies-parser use is that i can easily access the cookies in user browser through my server and also set the user cookies 
 app.use(cookieParser())
+
+
+
+
+
+
+
+//routes import 
+import userRouter from "./routes/user.route.js";
+
+
+//routes declaration
+//app.use("/users",userRouter) //(url,router u want to use) //when someone types users then control goes to userRouter
+//http:??localhost:8000/users/register 
+app.use("/api/v1/users",userRouter)//standard practice by defining your api version
+//http:??localhost:8000/api/vi/users/register
 
 
 export {app};
