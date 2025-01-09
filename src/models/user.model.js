@@ -1,10 +1,10 @@
-import mongoose ,{Schema} from "mongoose";
+import mongoose ,{ Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 const userSchema = new Schema(
     {
-       username:{
+        username:{
         type:String,
         required :true,
         unique: true,
@@ -19,7 +19,7 @@ const userSchema = new Schema(
         lowercase:true,
         trim:true,
        },
-       fullname:{
+        fullname:{
         type:String,
         required :true,
         trim:true,
@@ -32,7 +32,7 @@ const userSchema = new Schema(
        coverImage:{
         type:String, //cloudnary url 
        },
-       waitHistory :[
+       watchHistory :[
         {
             type: Schema.Types.ObjectId,
             ref:"Video"
