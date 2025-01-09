@@ -87,6 +87,19 @@ const uploadImage = async (req, res) => {
 };
 ```
 
+## Controllers
+
+Controllers handle the logic for different routes in the application. They are located in the `src/controllers/` directory.
+
+### User Controller
+
+The user controller handles user-related operations such as registration, login, and profile management. The user controller is located in the `src/controllers/user.controller.js` file.
+
+#### User Registration
+
+The user registration functionality allows new users to register by providing their details. The registration logic is implemented using the `asyncHandler` utility to handle asynchronous operations and the `ApiResponse` utility to format the response.
+
+
 ## Current Progress
 
 1. **Environment Setup**: The project is set up with necessary environment variables in the `.env` file.
