@@ -87,6 +87,47 @@ const uploadImage = async (req, res) => {
 };
 ```
 
+## Authentication
+
+The project uses JWT (JSON Web Tokens) for authentication. It includes access tokens and refresh tokens to manage user sessions securely.
+
+### Access Token
+
+An access token is a short-lived token used to authenticate requests to protected routes. It is typically included in the `Authorization` header of HTTP requests.
+
+### Refresh Token
+
+A refresh token is a long-lived token used to obtain a new access token when the current access token expires. It is typically stored securely on the client side and sent to the server when requesting a new access token.
+
+### Environment Variables
+
+Add the following environment variables to your `.env` file to configure JWT secrets and expiry times:
+
+```properties
+ACCESS_TOKEN_SECRET=your_access_token_secret
+ACCESS_TOKEN_EXPIRY=1d
+REFRESH_TOKEN_SECRET=your_refresh_token_secret
+REFRESH_TOKEN_EXPIRY=7d
+```
+
+### Generating Tokens
+
+Tokens are generated using the jsonwebtoken package. Here is an example of how to generate access and refresh tokens:
+
+```javascript
+import jwt from 'jsonwebtoken';
+
+const generateAccessToken = (user) => {
+    return jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY });
+};
+
+const generateRefreshToken = (user) => {
+    return jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: process.env.REFRESH_TOKEN_EXPIRY });
+};
+```
+Using Tokens
+When a user logs in or registers, the server generates an access token and a refresh token. The access token is sent to the client and used for subsequent requests to protected routes. The refresh token is stored securely on the client side and used to obtain a new access token when needed.
+
 ## Controllers
 
 Controllers handle the logic for different routes in the application. They are located in the `src/controllers/` directory.
