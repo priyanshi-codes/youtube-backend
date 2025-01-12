@@ -1,8 +1,9 @@
 // Desc: Middleware for authentication
 // Import necessary modules
 import jwt from "jsonwebtoken";
-import ApiError from "../utils/ApiError.js";
+import {ApiError} from "../utils/ApiError.js";
 import {User} from "../models/user.model.js"
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 
 export const verifyJWT = asyncHandler(async(req,_,next)=>{ //_, we are not using response or not response is not needed
