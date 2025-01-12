@@ -134,11 +134,32 @@ Controllers handle the logic for different routes in the application. They are l
 
 ### User Controller
 
-The user controller handles user-related operations such as registration, login, and profile management. The user controller is located in the `src/controllers/user.controller.js` file.
+The user controller handles user-related operations such as registration, login, profile management, and updating user details. The user controller is located in the `src/controllers/user.controller.js` file.
 
 #### User Registration
 
 The user registration functionality allows new users to register by providing their details. The registration logic is implemented using the `asyncHandler` utility to handle asynchronous operations and the `ApiResponse` utility to format the response.
+
+#### User Profile Management
+
+The user controller includes several functions to manage user profiles:
+
+##### Change Current Password
+
+Allows users to change their current password by providing the old and new passwords.
+
+##### Get Current User
+Fetches the details of the currently authenticated user.
+
+##### Update User Details
+Updates the details of the currently authenticated user, such as fullname, email, and username.
+
+##### Update User Avatar
+Allows users to update their avatar by uploading a new image.
+
+##### Update User Cover Image
+Allows users to update their cover image by uploading a new image.
+
 
 
 ## Current Progress
