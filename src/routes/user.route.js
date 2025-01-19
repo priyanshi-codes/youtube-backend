@@ -1,5 +1,16 @@
 import {Router} from 'express';
-import {loginUser,logoutUser, registerUser, refreshAccessToken } from '../controllers/user.controller.js';
+import {loginUser,
+    logoutUser,
+    registerUser,
+    refreshAccessToken,
+    changeCurrentPassword,
+    getCurrentUser,
+    updateAccountDetails,
+    updateUserAvatar,
+    updateUserCoverImage, getUserChannelProfile,
+    getWatchHistory
+} 
+from '../controllers/user.controller.js';
 import {upload} from "../middleware/multer.middleware.js"
 import {verifyJWT} from "../middleware/auth.middleware.js"
 
@@ -39,5 +50,27 @@ router.route("/login").post(loginUser)
 //adding middlewares
 router.route("/logout").post(verifyJWT,logoutUser)
 router.route("/refresh-token").post(refreshAccessToken)
+router.route("/change-password").post(verifyJWT, changeCurrentPassword)
+router.route("/current-user").post(verifyJWT, getCurrentUser)
+router.route("/update-account").patch(verifyJWT, updateAccountDetails)
+
+
+router.route("/update-avatar").patch(verifyJWT,upload.single("avatar"),updateUserAvatar)
+
+//patch- when you take user from body
+//when you have to update only one field
+router
+.route("/update-cover-image")
+.patch(
+    verifyJWT,
+     upload.single("coverImage"), updateUserCoverImage
+    )
+
+//when u take user from url/params
+router.route("/c/:username").get(verifyJWT, getUserChannelProfile)
+
+router.route("/watch-history").get(verifyJWT, getWatchHistory)
+
+
 
 export default router;
