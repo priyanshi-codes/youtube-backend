@@ -4,6 +4,7 @@ import {User} from "../models/user.model.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken";
+import { channel } from "diagnostics_channel";
 
 
 //making methods for generating access and refresh tokens because it is used multiple times in the code
@@ -390,7 +391,7 @@ const updateUserAvatar = asyncHandler(async(req,res)=>{
         const publicId = oldAvatar.split("/").pop().split(".")[0]
         await cloudinary.uploader.destroy(publicId)
     }
-    
+
 
     return res.status(200)
     .json(
@@ -438,6 +439,99 @@ const  updateUserCoverImage = asyncHandler(async(req,res)=>{
         )   
     )
 })
+
+
+const getUserChannelProfile = asyncHandler(async(req,res)=>{
+
+    const {username} = req.params
+
+    if(!username.trim()){
+        throw new ApiError(400, "Username is missing")
+    }
+
+    const channel = await User.aggregate([
+
+        //first pipeline
+        {
+            $match:{
+                username: username?.toLowerCase()
+            }
+        },
+        //second pipeline
+        //count no. of subscriber for particular channel
+        {
+            $lookup:{
+                from : "subscriptions",
+                localField:"_id",
+                foreignField:"channel",
+                as : "subscribers"
+            }
+        },
+        //third pipeline
+        //no. of channels subscribed by particular channel or no. of subscribed channel
+        {
+            $lookup:{
+                from : "subscriptions",
+                localField:"_id",
+                foreignField:"subscriber",
+                as : "channelsSubscribed"
+            }
+        },
+        //fourth pipeline
+  //count the no. of subscriber from subscriber field and also cont the no. of channel subscribed by particular channel
+        {
+            $addFields:{
+                subscriberCount:{
+                    $size: "$subscribers"
+                },
+                channelSubscribedCount:{
+                    $size: "$channelsSubscribed"
+                },
+//check the user is subscribed or not
+                isSubscribed:{
+                    $cond:{
+                        if:{
+                             $in:[req.user?._id, "$subscribers.subscriber"]
+                        },
+                        then: true,
+                        else:false
+                    }
+                }
+            }
+        },
+        //fifth pipeline
+        //project the fields : select the fields to show in response
+         {
+            $project: {
+                fullname :1,
+                username:1,
+                avatar:1,
+                coverImage:1,
+                subscriberCount:1,
+                channelSubscribedCount:1,
+                isSubscribed:1
+            }
+        }
+
+    ])
+
+    if(!channel?.length)
+        {
+            throw new ApiError(404, "Channel not found")
+    }
+    console.log("channel",channel);
+
+    return res.status(
+        200
+    ).json(
+        new ApiResponse(
+            200,
+            channel[0],
+            "Channel profile fetched successfully"
+        )
+    )
+
+})
     
 
 
@@ -450,5 +544,6 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
-    updateUserCoverImage
+    updateUserCoverImage,
+    getUserChannelProfile
  }
