@@ -326,7 +326,9 @@ const changeCurrentPassword = asyncHandler(async(req,res)=>{
 
 const getCurrentUser = asyncHandler(async(res,req)=>{
     return res.status(200)
-    .json(200, req.user, "current user fetched succesfully")
+    .json(new ApiResponse(
+        200, req.user, "current user fetched succesfully")
+)
 })
 
 const updateAccountDetails = asyncHandler(async(req,res)=>{
@@ -336,7 +338,7 @@ const updateAccountDetails = asyncHandler(async(req,res)=>{
         throw new ApiError(400, "Atleast one field is required")
     }
 
-    User.findByIdAndUpdate(
+   const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set:{
@@ -380,6 +382,15 @@ const updateUserAvatar = asyncHandler(async(req,res)=>{
         },
         {new :true}
     ).select("-password")
+
+
+    //todo : delete old avatar from cloudinary
+    const oldAvatar = req.user?.avatar
+    if(oldAvatar){
+        const publicId = oldAvatar.split("/").pop().split(".")[0]
+        await cloudinary.uploader.destroy(publicId)
+    }
+    
 
     return res.status(200)
     .json(
